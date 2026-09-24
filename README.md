@@ -1,63 +1,121 @@
-<h1 align="center"> 	Movie Application </h1>
+<p align="center"><img src=".github/assets/project-banner.svg" alt="Movie App project banner" width="100%"></p>
 
-<p align="center">This movie andoid app has been developed with features that allow users to browse movies and series, actors and their works, search for movies, series or actors, add reviews and comments on movies and series, create custom lists such as watch later or favorites, and manage their account through a login and signup. </p>
+# Movie App
 
-## Video
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=i2YURMEcDec?autoplay=1">
-    <img src="http://img.youtube.com/vi/i2YURMEcDec/hqdefault.jpg" alt="Movie App" width="800" height="450">
-  </a>
-</p>
+A feature-rich Android application for discovering movies, TV shows and actors through TMDB. It combines remote media data with local history and lists, supports account/session flows, and follows an MVVM-oriented architecture with repositories, use cases and dedicated UI state models.
 
-## Tech stack
-- [Hilt dependency injection](https://developer.android.com/training/dependency-injection/hilt-android) to manage dependencies, which can help to improve code quality and maintainability.
-- [Paging library](https://developer.android.com/topic/libraries/architecture/paging/v3-overview) to load data in pages, which can improve performance and user experience.
-- [Data Store](https://developer.android.com/jetpack/androidx/releases/datastore) to store data locally, which can improve performance and offline support.
-- [MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel) to separates the UI from the business logic, which can improve code quality and maintainability.
-- [Room](https://developer.android.com/jetpack/androidx/releases/room) to persist data to a database, which can improve performance and data security.
-- [Coroutines](https://developer.android.com/kotlin/coroutines) to write asynchronous code, which can improve performance and responsiveness.
-- [Data Binding](https://developer.android.com/codelabs/android-databinding#0) to bind data to views, which can improve code quality and maintainability.
-- [Live Data](https://developer.android.com/topic/libraries/architecture/livedata) to observe data changes, which can improve code quality and responsiveness.
-- [Navigation](https://developer.android.com/jetpack/androidx/releases/navigation) to navigate between screens, which can improve user experience.
+> This repository is a fork of [Salmon-family/MovieApp](https://github.com/Salmon-family/MovieApp). See the upstream project and contributors for the original collaboration history.
 
 ## Features
-- <b>Login and signup:</b> Users can create an account and log in to the app to access their lists and preferences across multiple devices.
-- <b>Browse movies and series:</b> Users can browse the app to discover new movies and series that are categorized as new, latest, popular, top-rated, or by genre.
-- <b>Browse actors and their works:</b> Users can browse actors' profiles and their past work, such as movies and series.
-- <b>Search for movies, series or actors:</b> Users can search for specific movies, series, or actors using a search bar with predictive search suggestions.
-- <b>Review and comment:</b> Users can add reviews and comments to movies and series, sharing their opinions and thoughts about the content.
-- <b>Create custom lists:</b> Users can create custom lists to keep track of the movies and series they want to watch, such as a watch later list or a list of favorites.
-- <b>Watch trailers:</b> Users can watch trailers of movies and series to get a glimpse of the content before watching it.
 
+- browse trending, popular, upcoming and now-streaming movies
+- browse airing-today, on-the-air and top-rated TV shows
+- discover movies and TV shows by genre
+- browse actors and their filmography
+- movie and TV details
+- seasons and episode lists
+- trailers through an embedded YouTube player
+- reviews
+- TMDB login/session flow
+- account/profile information
+- rate movies and TV shows
+- create custom TMDB lists
+- save media to custom lists
+- local search history
+- local watch history
+- rated-media history
+- search across movies, TV shows and actors
+- paginated remote results
 
+## Architecture
 
-## Contributors
-<a href="https://github.com/Salmon-family/MovieApp/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Salmon-family/MovieApp" />
-</a>
+The codebase separates data, domain and UI responsibilities:
 
+```
+app/src/main/java/com/karrar/movieapp/
+├── data/
+│   ├── local/          Room + DataStore
+│   ├── remote/         Retrofit services and DTOs
+│   └── repository/     repository implementations and paging sources
+├── domain/
+│   ├── models/
+│   ├── mappers/
+│   └── usecases/
+├── di/                 Hilt modules
+├── ui/                 feature screens, view models and UI state
+└── utilities/
+```
 
-## How to build on your environment
-Add your [TMDB](https://developers.themoviedb.org/3/getting-started/introduction) API key in local.properties file.
-- apiKey=YOUR_API_KEY
+Typical data flow:
 
-## Download apk
-download APK from [here](https://github.com/Salmon-family/MovieApp/releases/tag/1.0.0).
+```
+UI -> ViewModel -> Use Case -> Repository
+                         ├-> TMDB API
+                         └-> Room / DataStore
+```
+
+## Tech stack
+
+| Area | Technology |
+| --- | --- |
+| Language | Kotlin |
+| Architecture | MVVM + repository/use-case layers |
+| Networking | Retrofit + OkHttp |
+| API | The Movie Database (TMDB) |
+| DI | Hilt |
+| Local DB | Room |
+| Preferences | DataStore |
+| Pagination | Paging 3 |
+| Images | Picasso + Coil |
+| Navigation | Android Navigation Component |
+| Async/state | Coroutines + LiveData |
+| UI binding | Data Binding + View Binding |
+| Video | Android YouTube Player |
+| Animations | Lottie |
+| Monitoring | Firebase Analytics, Crashlytics and Performance |
+
+The application targets Android API 32 and supports devices from API 21.
+
+## TMDB integration
+
+The app uses:
+
+```
+https://api.themoviedb.org/3/
+```
+
+Image assets are loaded from TMDB's image CDN, and authentication uses TMDB request-token/session APIs.
+
+## Local setup
+
+Create a `local.properties` file in the project root and add your TMDB API key:
+
+```properties
+apiKey="YOUR_TMDB_API_KEY"
+```
+
+Then open the project in Android Studio and sync Gradle.
+
+## Build
+
+```bash
+./gradlew assembleDebug
+```
+
+To run tests:
+
+```bash
+./gradlew test
+```
+
+## Data stored locally
+
+Room entities cover cached media categories, actors, search history, watch history and saved/watch-list related data. DataStore is used for lightweight application/session preferences.
 
 ## License
 
-```xml
-Designed and developed by 2022 EliteDevs
+This repository includes the Apache License 2.0. See the [LICENSE](LICENSE) file for the complete terms.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+## Credits
 
-   http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
+Movie and TV metadata is provided by TMDB. The original project was developed collaboratively in the upstream Salmon-family repository.
